@@ -191,67 +191,67 @@ jobs:
           
           # Create release notes
           cat > artifacts/RELEASE_NOTES.txt <<"EOF"
-===================================
-Nitrogen Kernel Build Information
-===================================
-
-Version: ${{ steps.info.outputs.version }}
-Build Number: ${{ steps.info.outputs.build_number }}
-Build Type: ${{ steps.info.outputs.build_type }}
-Build Date: ${{ steps.info.outputs.build_date }} ${{ steps.info.outputs.build_time }}
-Git Commit: ${{ steps.info.outputs.git_commit }}
-Branch: ${{ steps.info.outputs.git_branch }}
-Architecture: arm64
-Device: Nitrogen (Mi Max 3)
-
-===================================
-Installation Instructions
-===================================
-
-METHOD 1: Using AROMA Installer (Recommended)
-1. Copy nitrogen_aroma_installer.zip to your device
-2. Reboot to recovery (TWRP or similar)
-3. Go to Install > Select nitrogen_aroma_installer.zip
-4. Swipe to confirm installation
-5. Reboot to system
-
-METHOD 2: Manual Installation (Advanced)
-1. Extract boot.img from the zip file
-2. Use fastboot: fastboot flash boot boot.img
-3. Or use recovery: adb push boot.img /tmp/ && recovery --update=/tmp/boot.img
-
-===================================
-Features & Changelog
-===================================
-
-✓ Optimized for Nitrogen device
-✓ arm64 architecture
-✓ Based on Linux kernel 4.4.302
-✓ Performance improvements
-✓ Security patches included
-✓ Professional AROMA installer interface
-✓ Easy installation via recovery
-
-===================================
-Technical Details
-===================================
-
-Defconfig: nitrogen_defconfig
-Cross-compiler: aarch64-linux-gnu
-Build command: make CONFIG=nitrogen_defconfig
-Kernel tree: This repository
-
-===================================
-Support & Documentation
-===================================
-
-For issues and support, please visit:
-- GitHub Issues: Check the repository issues page
-- XDA Forums: Search for Nitrogen kernel discussions
-
-Build metadata included in installer for version tracking.
-
-EOF
+          ===================================
+          Nitrogen Kernel Build Information
+          ===================================
+          
+          Version: ${{ steps.info.outputs.version }}
+          Build Number: ${{ steps.info.outputs.build_number }}
+          Build Type: ${{ steps.info.outputs.build_type }}
+          Build Date: ${{ steps.info.outputs.build_date }} ${{ steps.info.outputs.build_time }}
+          Git Commit: ${{ steps.info.outputs.git_commit }}
+          Branch: ${{ steps.info.outputs.git_branch }}
+          Architecture: arm64
+          Device: Nitrogen (Mi Max 3)
+          
+          ===================================
+          Installation Instructions
+          ===================================
+          
+          METHOD 1: Using AROMA Installer (Recommended)
+          1. Copy nitrogen_aroma_installer.zip to your device
+          2. Reboot to recovery (TWRP or similar)
+          3. Go to Install > Select nitrogen_aroma_installer.zip
+          4. Swipe to confirm installation
+          5. Reboot to system
+          
+          METHOD 2: Manual Installation (Advanced)
+          1. Extract boot.img from the zip file
+          2. Use fastboot: fastboot flash boot boot.img
+          3. Or use recovery: adb push boot.img /tmp/ && recovery --update=/tmp/boot.img
+          
+          ===================================
+          Features & Changelog
+          ===================================
+          
+          ✓ Optimized for Nitrogen device
+          ✓ arm64 architecture
+          ✓ Based on Linux kernel 4.4.302
+          ✓ Performance improvements
+          ✓ Security patches included
+          ✓ Professional AROMA installer interface
+          ✓ Easy installation via recovery
+          
+          ===================================
+          Technical Details
+          ===================================
+          
+          Defconfig: nitrogen_defconfig
+          Cross-compiler: aarch64-linux-gnu
+          Build command: make CONFIG=nitrogen_defconfig
+          Kernel tree: This repository
+          
+          ===================================
+          Support & Documentation
+          ===================================
+          
+          For issues and support, please visit:
+          - GitHub Issues: Check the repository issues page
+          - XDA Forums: Search for Nitrogen kernel discussions
+          
+          Build metadata included in installer for version tracking.
+          
+          EOF
           
           ls -lh artifacts/
 
