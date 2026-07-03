@@ -30,12 +30,19 @@ git push origin v4.4.302
 ### Local Quick Build
 ```bash
 bash scripts/build-local.sh
+# Or use prebuilt scripts from build-output folder
+bash build-output/build-local.sh
 # Output: out/boot.img
 ```
 
 ### Create AROMA Installer (After Build)
 ```bash
+# From scripts folder
 bash scripts/build_aroma_installer.sh \
+  out/boot.img "4.4.302" "abc1234" "20260703" "1" "stable"
+
+# Or from build-output folder
+bash build-output/build_aroma_installer.sh \
   out/boot.img "4.4.302" "abc1234" "20260703" "1" "stable"
 # Output: nitrogen_aroma_installer.zip
 ```

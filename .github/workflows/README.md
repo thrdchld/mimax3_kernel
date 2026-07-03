@@ -2,6 +2,18 @@
 
 This directory contains the GitHub Actions workflow for building the Nitrogen Kernel with professional AROMA installer support.
 
+## Directory Structure
+
+```
+.github/workflows/
+├── build-kernel.yml          # Main GitHub Actions workflow
+└── README.md                 # This documentation
+
+build-output/                 # Quick access copies of build scripts
+├── build-local.sh
+└── build_aroma_installer.sh
+```
+
 ## Files Overview
 
 - **build-kernel.yml** - Main GitHub Actions workflow that:

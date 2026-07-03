@@ -154,11 +154,11 @@ The workflow generates:
 ### Method 1: Using build-local.sh (Recommended)
 
 ```bash
-# Make script executable
-chmod +x scripts/build-local.sh
-
-# Run build
+# Run from scripts folder (already executable)
 bash scripts/build-local.sh
+
+# Or use prebuilt copy from build-output folder
+bash build-output/build-local.sh
 
 # Output:
 # - out/arch/arm64/boot/Image
@@ -188,7 +188,17 @@ make O=out ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
 
 ```bash
 # After building kernel:
+# From scripts folder
 bash scripts/build_aroma_installer.sh \
+  out/boot.img \
+  "4.4.302" \
+  "abc1234" \
+  "20260703" \
+  "1" \
+  "stable"
+
+# Or from build-output folder (recommended for easy access)
+bash build-output/build_aroma_installer.sh \
   out/boot.img \
   "4.4.302" \
   "abc1234" \

@@ -190,7 +190,7 @@ jobs:
           fi
           
           # Create release notes
-          cat > artifacts/RELEASE_NOTES.txt <<EOF
+          cat > artifacts/RELEASE_NOTES.txt <<"EOF"
 ===================================
 Nitrogen Kernel Build Information
 ===================================

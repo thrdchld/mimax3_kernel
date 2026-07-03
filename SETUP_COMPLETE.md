@@ -131,7 +131,11 @@ adb reboot
 
 ### Quick Build
 ```bash
+# From scripts folder
 bash scripts/build-local.sh
+
+# Or from root folder (using build-output copies)
+bash build-output/build-local.sh
 ```
 
 ### Manual Build
@@ -142,8 +146,10 @@ export CROSS_COMPILE=aarch64-linux-gnu-
 make O=out ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- nitrogen_defconfig
 make O=out ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
 
-# Create AROMA installer
+# Create AROMA installer (from scripts or build-output folder)
 bash scripts/build_aroma_installer.sh out/boot.img "4.4.302" "abc1234" "20260703" "1" "stable"
+# Or:
+bash build-output/build_aroma_installer.sh out/boot.img "4.4.302" "abc1234" "20260703" "1" "stable"
 ```
 
 ---

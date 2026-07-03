@@ -57,8 +57,11 @@ bash build-local.sh
 
 ### Local Build (Testing)
 ```bash
-# One-command build
+# From scripts folder
 bash build-local.sh
+
+# Or from root build-output folder (quick access)
+bash ../build-output/build-local.sh
 
 # Creates out/boot.img
 ```
@@ -74,11 +77,13 @@ git push origin main
 
 ### Full Pipeline (Local)
 ```bash
-# 1. Build kernel
+# Option 1: From scripts folder
 bash build-local.sh
-
-# 2. Create AROMA installer
 bash build_aroma_installer.sh out/boot.img "4.4.302" "abc1234" "20260703" "1" "stable"
+
+# Option 2: From root folder using build-output copies (recommended)
+bash build-output/build-local.sh
+bash build-output/build_aroma_installer.sh out/boot.img "4.4.302" "abc1234" "20260703" "1" "stable"
 
 # Results:
 # - out/boot.img (raw image for fastboot)
