@@ -82,8 +82,7 @@ jobs:
             curl \
             wget \
             gcc-aarch64-linux-gnu \
-            binutils-aarch64-linux-gnu \
-            libgcc-aarch64-linux-gnu-dev
+            binutils-aarch64-linux-gnu
 
       - name: Create output directory
         run: |
