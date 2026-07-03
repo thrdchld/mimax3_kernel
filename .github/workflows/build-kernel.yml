@@ -28,7 +28,6 @@ env:
   KERNEL_DEFCONFIG: nitrogen_defconfig
   KERNEL_ARCH: arm64
   CROSS_COMPILE: aarch64-linux-gnu-
-  CROSS_COMPILE_ARM32: arm-linux-gnueabi-
   OUT_DIR: out
 
 jobs:
@@ -84,8 +83,7 @@ jobs:
             wget \
             gcc-aarch64-linux-gnu \
             binutils-aarch64-linux-gnu \
-            gcc-arm-linux-gnueabi \
-            binutils-arm-linux-gnueabi
+            libgcc-aarch64-linux-gnu-dev
 
       - name: Create output directory
         run: |
@@ -103,11 +101,11 @@ jobs:
           echo "============================="
           
           # Load defconfig
-          make O=${OUT_DIR} ARCH=${KERNEL_ARCH} CROSS_COMPILE=${CROSS_COMPILE} CROSS_COMPILE_ARM32=${CROSS_COMPILE_ARM32} \
+          make O=${OUT_DIR} ARCH=${KERNEL_ARCH} CROSS_COMPILE=${CROSS_COMPILE} \
             ${KERNEL_DEFCONFIG}
           
           # Build kernel
-          make O=${OUT_DIR} ARCH=${KERNEL_ARCH} CROSS_COMPILE=${CROSS_COMPILE} CROSS_COMPILE_ARM32=${CROSS_COMPILE_ARM32} \
+          make O=${OUT_DIR} ARCH=${KERNEL_ARCH} CROSS_COMPILE=${CROSS_COMPILE} \
             -j$(nproc) 2>&1 | tee build.log
           
           if [ ! -f ${OUT_DIR}/arch/arm64/boot/Image ]; then
