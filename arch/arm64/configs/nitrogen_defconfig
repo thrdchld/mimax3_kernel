@@ -3012,8 +3012,10 @@ CONFIG_DTS_SRS_TM=y
 CONFIG_QTI_PP=y
 # CONFIG_QTI_PP_AUDIOSPHERE is not set
 CONFIG_SND_SOC_CPE=y
-CONFIG_SND_SOC_INT_CODEC=y
-CONFIG_SND_SOC_EXT_CODEC=y
+# Disable MSM INT/EXT codec machine drivers to avoid selecting TFA9894
+# which triggers warnings-as-errors in tfa98xx driver during CI builds.
+# CONFIG_SND_SOC_INT_CODEC is not set
+# CONFIG_SND_SOC_EXT_CODEC is not set
 # CONFIG_SND_SOC_MSM8996_VM is not set
 CONFIG_SND_SOC_MSM8998=y
 CONFIG_SND_SOC_SDM660=y
