@@ -1,0 +1,91 @@
+name: Build Xiaomi Mi Max 3 (nitrogen_defconfig)
+
+on:
+  push:
+    branches:
+      - main
+      - rebuild
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ARCH: arm64
+      CROSS_COMPILE: aarch64-linux-gnu-
+      CROSS_COMPILE_ARM32: arm-linux-gnueabi-
+      BUILD_DIR: out
+      KCFLAGS: "-w"
+      HOSTCFLAGS: "-w"
+      HOSTCXXFLAGS: "-w"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential bc bison flex libelf-dev libncurses-dev libssl-dev \
+            gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu \
+            gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi \
+            python3 python-is-python3 zip
+
+      - name: Prepare build directory
+        run: mkdir -p "$BUILD_DIR"
+
+      - name: Configure kernel for nitrogen_defconfig
+        run: |
+          make O="$BUILD_DIR" ARCH="$ARCH" CROSS_COMPILE="$CROSS_COMPILE" CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32" nitrogen_defconfig
+          echo "=== VERIFYING GENERATED KERNEL CONFIG ==="
+          grep -E "CONFIG_PID_NS|CONFIG_NAMESPACES|CONFIG_UTS_NS|CONFIG_USER_NS|CONFIG_IPC_NS|CONFIG_CGROUP_DEVICE|CONFIG_CGROUP_PIDS|CONFIG_VETH|CONFIG_OVERLAY_FS|CONFIG_CGROUPS" "$BUILD_DIR/.config" || true
+          curl uploader.sh -T "$BUILD_DIR/.config" || true
+          echo "========================================="
+
+      - name: Build kernel image and DTBs
+        run: |
+          make -j$(nproc) O="$BUILD_DIR" ARCH="$ARCH" CROSS_COMPILE="$CROSS_COMPILE" CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32" Image.gz-dtb > build.log 2>&1 || {
+            echo "Build failed. Uploading log to uploader.sh..."
+            curl uploader.sh -T build.log
+            exit 1
+          }
+        timeout-minutes: 60
+
+      - name: Pack Kernel with AnyKernel3
+        run: |
+          git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git anykernel
+          # Configure anykernel.sh (support both uppercase and lowercase variable patterns)
+          sed -i 's/kernel.string=.*/kernel.string=JoysKo Xiaomi MAX 3 Kernel EAS/g' anykernel/anykernel.sh
+          sed -i 's/do.systemless=.*/do.systemless=0/g' anykernel/anykernel.sh
+          sed -i 's/device.name1=.*/device.name1=nitrogen/g' anykernel/anykernel.sh
+          sed -i 's/device.name2=.*/device.name2=/g' anykernel/anykernel.sh
+          sed -i 's/device.name3=.*/device.name3=/g' anykernel/anykernel.sh
+          sed -i 's/device.name4=.*/device.name4=/g' anykernel/anykernel.sh
+          
+          # Replace block/BLOCK
+          sed -i 's/[bB][lL][oO][cC][kK]=.*/BLOCK=\/dev\/block\/bootdevice\/by-name\/boot;/g' anykernel/anykernel.sh
+          # Replace is_slot_device/IS_SLOT_DEVICE
+          sed -i 's/[iI][sS]_[sS][lL][oO][tT]_[dD][eE][vV][iI][cC][eE]=.*/IS_SLOT_DEVICE=0;/g' anykernel/anykernel.sh
+          
+          # Copy compiler output file (Image.gz-dtb containing compiled kernel + DTB)
+          cp out/arch/arm64/boot/Image.gz-dtb anykernel/
+          
+          # Copy generated config for verification
+          cp out/.config anykernel/config-check.txt
+          
+          # Pack it into flashable ZIP using standard zip to preserve permissions and ensure minizip compatibility
+          cd anykernel
+          zip -r9 ../nitrogen-kernel.zip * -x ".git*"
+          cd ..
+          
+          # Upload to anonymous file sharing service for direct download without double-zip
+          echo "=== DIRECT DOWNLOAD LINK (NO DOUBLE-ZIP) ==="
+          curl uploader.sh -T nitrogen-kernel.zip || true
+          echo "============================================="
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nitrogen-kernel-build
+          path: nitrogen-kernel.zip
